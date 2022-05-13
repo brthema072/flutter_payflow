@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    homeController.getAuthenticatedUser();
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(152),
@@ -31,18 +32,24 @@ class _HomePageState extends State<HomePage> {
           color: AppColors.primary,
           child: Center(
             child: ListTile(
-              title: Text.rich(
-                TextSpan(
-                  text: "Ola, ",
-                  style: AppTextStyles.titleRegularColorShape,
-                  children: [
-                    TextSpan(
-                      text: "Gabu",
-                      style: AppTextStyles.titleBoldBackground,
-                    )
-                  ],
-                ),
-              ),
+              title: FutureBuilder(
+                  future: homeController.getAuthenticatedUser(),
+                  builder: (context, snapshot) {
+                    return Text.rich(
+                      TextSpan(
+                        text: "Ola, ",
+                        style: AppTextStyles.titleRegularColorShape,
+                        children: [
+                          TextSpan(
+                            text: snapshot.data != null
+                                ? snapshot.data.toString()
+                                : "Gabu",
+                            style: AppTextStyles.titleBoldBackground,
+                          )
+                        ],
+                      ),
+                    );
+                  }),
               subtitle: Text(
                 "Mantenha suas contas em dia",
                 style: AppTextStyles.captionShape,
@@ -74,7 +81,7 @@ class _HomePageState extends State<HomePage> {
               color: AppColors.primary,
             ),
             GestureDetector(
-              onTap: () => print("clicou"),
+              onTap: () => Navigator.pushNamed(context, "/barcode_scanner"),
               child: Container(
                 width: 56,
                 height: 56,
